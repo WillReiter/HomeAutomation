@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bodyStyle">
+
+    <h1>Devices</h1>
+
+    <!-- <button type="button" id="button1">Button 1</button> -->
+
+    <div class="item">
+        <div class="key">
+            LED Clock
+        </div>
+        <div class="toggle">
+            <div class="onoffswitch">
+                <input  type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="clockPower" tabindex="0"
+                    checked>
+                <label class="onoffswitch-label" for="clockPower"></label>
+            </div>
+        </div>
+        <!-- <button type="button" id="clockRestart">Restart</button>
+        <button type="button" id="clockOff">Power Off</button> -->
+        <div class="centerText">Adjust Brigtness</div>
+        <input id="clockBrightness" type="range" min="1" max="100" value="50">
+    </div>
+
+
+    <script>
+        // Add event listeners to buttons
+        // document.getElementById('clock').addEventListener('click', () => {
+        //     getData('http://0.0.0.0:8081/ping')
+        //     alert('You clicked Button 1!');
+        // });
+
+        document.getElementById("clockPower").addEventListener('input', (event) => {
+            console.log(event.target.value)
+        }) 
+
+
+        document.getElementById("clockBrightness").addEventListener('input', debounce((event) => {
+            const value = event.target.value;
+            console.log("Range value:", value);
+        }, 300))
+
+
+
+
+        function debounce(func, delay) {
+            let timeoutId;
+
+            return function (...args) {
+                clearTimeout(timeoutId);
+
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+
+
+        async function executeRequest(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+
+                const json = await response.json();
+                console.log(json);
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+    </script>
+
+</body>
+
+</html>

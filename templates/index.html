@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Device Control</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>IoT Device Controller</h1>
+    </header>
+
+    <main>
+        <section class="device-control">
+            <h2>Device Controls</h2>
+
+            <!-- Light Device -->
+            <div class="device">
+                <p>Light</p>
+                <div class="controls">
+                    <label class="switch">
+                        <input type="checkbox" id="light-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <div class="schedule">
+                        <label for="light-time">Set Time:</label>
+                        <input type="time" id="light-time">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fan Device -->
+            <div class="device">
+                <p>Fan</p>
+                <div class="controls">
+                    <label class="switch">
+                        <input type="checkbox" id="fan-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <div class="schedule">
+                        <label for="fan-time">Set Time:</label>
+                        <input type="time" id="fan-time">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Door Lock Device -->
+            <div class="device">
+                <p>Door Lock</p>
+                <div class="controls">
+                    <label class="switch">
+                        <input type="checkbox" id="door-lock-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <div class="schedule">
+                        <label for="door-time">Set Time:</label>
+                        <input type="time" id="door-time">
+                    </div>
+                </div>
+            </div>
+
+            <!-- LED Clock Device -->
+            <div class="device">
+                <p>LED Clock</p>
+                <div class="controls">
+                    <label class="switch">
+                        <input type="checkbox" id="led-clock-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <input type="range" id="led-brightness" min="0" max="100" value="50" disabled>
+                    <span id="brightness-value">50%</span>
+                    <div class="schedule">
+                        <label for="led-time">Set Time:</label>
+                        <input type="time" id="led-time">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Enable or disable the brightness slider based on LED Clock toggle
+        const ledClockToggle = document.getElementById('led-clock-toggle');
+        const brightnessSlider = document.getElementById('led-brightness');
+        const brightnessValue = document.getElementById('brightness-value');
+
+        ledClockToggle.addEventListener('change', () => {
+            brightnessSlider.disabled = !ledClockToggle.checked;
+        });
+
+        brightnessSlider.addEventListener('input', () => {
+            brightnessValue.textContent = `${brightnessSlider.value}%`;
+        });
+
+        // Scheduling functionality
+        function scheduleDevice(id, action) {
+            const currentTime = new Date();
+            const deviceTimeInput = document.getElementById(id);
+            const [hours, minutes] = deviceTimeInput.value.split(':').map(Number);
+
+            if (!deviceTimeInput.value) return;
+
+            const scheduleTime = new Date();
+            scheduleTime.setHours(hours, minutes, 0, 0);
+
+            const delay = scheduleTime - currentTime;
+
+            if (delay > 0) {
+                setTimeout(() => {
+                    action();
+                }, delay);
+            } else {
+                alert('Please set a future time.');
+            }
+        }
+
+        // Example: Scheduling the light
+        const lightTimeInput = document.getElementById('light-time');
+        lightTimeInput.addEventListener('change', () => {
+            scheduleDevice('light-time', () => {
+                document.getElementById('light-toggle').checked = !document.getElementById('light-toggle').checked;
+            });
+        });
+
+        // Repeat for other devices...
+    </script>
+</body>
+
+</html>
